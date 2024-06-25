@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Button</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            background-attachment: fixed;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+        .button {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .button:hover {
+            background-color: #333;
+        }
+        .button:active {
+            transform: scale(0.95);
+        }
+        #counter {
+            font-size: 18px;
+            margin-top: 20px;
+            display: none; /* Hide the counter by default */
+        }
+        #code-input {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #code {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            width: 200px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s;
+        }
+        #code:focus {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            outline: none;
+        }
+        #submit-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        #submit-button:hover {
+            background-color: #0056b3;
+        }
+        #submit-button:active {
+            transform: scale(0.95);
+        }
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            animation: float 6s ease-in-out infinite;
+        }
+        .shape-1 {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            left: 10%;
+        }
+        .shape-2 {
+            width: 150px;
+            height: 150px;
+            top: 40%;
+            left: 70%;
+        }
+        .shape-3 {
+            width: 200px;
+            height: 200px;
+            top: 70%;
+            left: 30%;
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <button class="button" onclick="incrementCounterAndRedirect()">Instagram</button>
+    <div id="code-input">
+        <input type="text" id="code" placeholder="Enter code">
+        <button id="submit-button" onclick="checkCode()">Submit</button>
+    </div>
+    <div id="counter">Loading...</div>
+    
+    <script>
+        const counterElement = document.getElementById('counter');
+        const codeInput = document.getElementById('code-input');
+        const serverUrl = window.location.origin; // Get the server URL dynamically
+
+        // Fetch the current counter value from the server
+        const fetchCounter = async () => {
+            try {
+                const response = await fetch(`${serverUrl}/counter`);
+                const data = await response.json();
+                counterElement.innerText = `Button clicked ${data.counter} times.`;
+            } catch (error) {
+                counterElement.innerText = 'Error loading counter.';
+            }
+        };
+
+        // Increment the counter value on the server and update the counter element
+        const incrementCounterAndRedirect = async () => {
+            try {
+                const response = await fetch(`${serverUrl}/increment`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                counterElement.innerText = `Button clicked ${data.counter} times.`;
+                setTimeout(() => {
+                    window.location.href = "https://www.instagram.com/lk_.sara/";
+                }, 500);
+            } catch (error) {
+                counterElement.innerText = 'Error updating counter.';
+            }
+        };
+
+        // Check the entered code and show the counter if the code is correct
+        const checkCode = () => {
+            const code = document.getElementById('code').value;
+            if (code === '0112') {
+                codeInput.style.display = 'none';
+                counterElement.style.display = 'block';
+                fetchCounter();
+            } else {
+                alert('Incorrect code');
+            }
+        };
+    </script>
+</body>
+</html>
